@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Slider from "../components/Slider/Slider";
+import Slider from "../Slider/Slider";
 import "./style.scss";
 
 const TimeRange = ({ hasScale }) => {

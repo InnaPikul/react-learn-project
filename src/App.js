@@ -1,7 +1,7 @@
 import React from "react";
 import TabsContainer from "./components/TabsContainer";
 import Slider from './components/Slider/Slider';
-import TimeRange from "./Timerange/TimeRange";
+import TimeRange from "./components/Timerange/TimeRange";
 
 
 function App() {
