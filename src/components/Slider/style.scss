@@ -1,0 +1,32 @@
+.wrapper {
+  padding: 20px 0;
+}
+
+.slider {
+  position: relative;
+  border-radius: 5px;
+  background: #e0e0e0;
+  width: 310px;
+  height: 15px;
+  margin-bottom: 20px;
+  .scale {
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+  }
+}
+
+.thumb {
+  z-index: 1000;
+  position: absolute;
+  top: -5px;
+  width: 10px;
+  height: 25px;
+  border-radius: 3px;
+  background: blue;
+  cursor: pointer;
+}
