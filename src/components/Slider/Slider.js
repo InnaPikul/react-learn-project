@@ -1,51 +1,43 @@
 import React, { useRef, useState } from "react";
 import "./style.scss";
 
-const Slider = (props) => {
+const Slider = ({ sendFromValue, sendToValue, hasScale, ...props }) => {
   const thumb = useRef(null);
   const slider = useRef(null);
-  const [thumbLeft, setThumbLeft] = useState(null);
-
-  const sendFromValue = (value) => {
-    props.sendFrom(value);
-  }
-
-  const sendToValue = (value) => {
-    props.sendTo(value);
-  }
-
-  const sendWidth = (value) => {
-    props.sendWidth(value);
-  }
+  const [initialThumbLeft, setInitialThumbLeft] = useState(0);
 
   function moveAt(pageX, shift) {
     const currentThumbPosition = pageX - slider.current.offsetLeft; // left point of current position of thumb on slider
-    sendWidth(slider.current.offsetWidth - thumb.current.offsetWidth); // send width value to parent element
-    if (currentThumbPosition > 0 && currentThumbPosition < slider.current.offsetWidth) { 
-      const left = Math.round(currentThumbPosition - shift);
-      const rightEdge = Math.round(slider.current.offsetWidth - thumb.current.offsetWidth);
+    if (
+      currentThumbPosition > 0 &&
+      currentThumbPosition < slider.current.offsetWidth
+    ) {
+      const left = Math.round(((currentThumbPosition - shift) * 100) / slider.current.offsetWidth);
+      const rightEdge = Math.round(
+        (slider.current.offsetWidth - thumb.current.offsetWidth) * 100 / slider.current.offsetWidth
+      );
+
       if (left < 0) {
-        setThumbLeft(0); 
-        props.sendFrom && sendFromValue(0); //? send From value to parent element
-        props.sendTo && sendToValue(0); //? send TO value to parent element
-      }
-      else if (left > rightEdge) {
-        setThumbLeft(rightEdge);
-        props.sendFrom && sendFromValue(rightEdge); //? send From value to parent element
-        props.sendTo && sendToValue(rightEdge); //? send TO value to parent element
+        setInitialThumbLeft(0);
+        sendFromValue && sendFromValue(0); //? send From value to parent element
+        sendToValue && sendToValue(0); //? send TO value to parent element
+      } else if (left > rightEdge) {
+        setInitialThumbLeft(rightEdge);
+        sendFromValue && sendFromValue(rightEdge); //? send From value to parent element
+        sendToValue && sendToValue(rightEdge); //? send TO value to parent element
       } else {
-        setThumbLeft(left);
-        props.sendFrom && sendFromValue(left); //? send From value to parent element
-        props.sendTo && sendToValue(left); //? send TO value to parent element
+        setInitialThumbLeft(left);
+        sendFromValue && sendFromValue(left); //? send From value to parent element
+        sendToValue && sendToValue(left); //? send TO value to parent element
       }
     }
   }
 
   const handleMousedown = (event) => {
     const shiftX = event.clientX - thumb.current.getBoundingClientRect().left;
-    
+
     moveAt(event.pageX, shiftX);
-    
+
     function onMouseMove(event) {
       moveAt(event.pageX, shiftX);
     }
@@ -63,29 +55,30 @@ const Slider = (props) => {
   }
 
   const handleSliderClick = (event) => {
-    const shiftX = (thumb.current.getBoundingClientRect().width / 2);
+    const shiftX = thumb.current.getBoundingClientRect().width / 2;
     moveAt(event.pageX, shiftX);
-  }
+  };
 
   return (
     <div className="slider" ref={slider} onClick={handleSliderClick}>
       <div
         className="thumb"
         style={{
-          left: `${thumbLeft}px`,
+          left: `${initialThumbLeft}%`,
         }}
         onMouseDown={handleMousedown}
         onDragStart={() => handleDragStart}
         ref={thumb}
       ></div>
-      {props.hasScale && <div className="scale">
-        <span>00:00</span>
-        <span>06:00</span>
-        <span>12:00</span>
-        <span>18:00</span>
-        <span>23:59</span>
-      </div>}
-      
+      {hasScale && (
+        <div className="scale">
+          <span>00:00</span>
+          <span>06:00</span>
+          <span>12:00</span>
+          <span>18:00</span>
+          <span>23:59</span>
+        </div>
+      )}
     </div>
   );
 };
