@@ -30,3 +30,12 @@
   background: blue;
   cursor: pointer;
 }
+
+.range-space {
+  z-index: 999;
+  position: absolute;
+  height: 15px;
+  background: lightgreen;
+  top: 0;
+  bottom: 0;
+}
