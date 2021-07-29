@@ -3,11 +3,8 @@ import Slider from "../Slider/Slider";
 import "./style.scss";
 
 const TimeRange = ({ hasScale }) => {
-  const [initialFrom, setInitialFrom] = useState(25);
-  const [initialTo, setInitialTo] = useState(50);
-
-  const [fromValue, setFromValue] = useState(initialFrom);
-  const [toValue, setToValue] = useState(initialTo);
+  const [fromValue, setFromValue] = useState(25);
+  const [toValue, setToValue] = useState(70);
 
   const convertToHours = (fieldValue) => {
     const hourInPercent = 100 / 24; //value in % of one hour
@@ -16,12 +13,20 @@ const TimeRange = ({ hasScale }) => {
 
   return (
     <div className="flex mb-5">
-      <Slider hasScale={hasScale} sendFromValue={setFromValue} setInitialFrom={setInitialFrom} initialFrom={initialFrom}/>
+      <Slider
+        hasScale={hasScale}
+        sendFromValue={setFromValue}
+        fromValue={fromValue}
+      />
       <div className="range px-4">
-        <span className="label">{convertToHours(fromValue)} </span>- 
-        <span className="label"> {convertToHours(toValue)}</span>
+        <span>{convertToHours(fromValue)} </span>-
+        <span> {convertToHours(toValue)}</span>
       </div>
-      <Slider hasScale={hasScale} sendToValue={setToValue} setInitialTo={setInitialTo} initialTo={initialTo} />
+      <Slider
+        hasScale={hasScale}
+        sendToValue={setToValue}
+        toValue={toValue}
+      />
     </div>
   );
 };
