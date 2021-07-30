@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./style.scss";
 
 const Slider = ({
@@ -14,16 +14,23 @@ const Slider = ({
   secondThumbRef,
   secondThumbLeft,
   setSecondThumbLeft,
-  //getSliderWidth,
+  rangeRef,
+  rangeLeft,
+  setRangeLeft,
+  rangeWidth,
+  getRangeWidth,
 }) => {
   const initialThumbRef = useRef(null);
   const slider = useRef(null);
-  const [initialThumbLeft, setInitialThumbLeft] = useState(5);
-  const rangeWidth = secondThumbLeft - firstThumbLeft;
+  const [initialThumbLeft, setInitialThumbLeft] = useState(0);
+  
+  useEffect(() => {
+    rangeWidth !== undefined && getRangeWidth(secondThumbLeft - firstThumbLeft);
+  });
 
   const getExactThumbValues = (event) => { 
     if (event.target.id === "firstThumb") {
-      if (firstThumbLeft) {
+      if (firstThumbLeft !== undefined) {
         return {
           action: setFirstThumbLeft,
           leftValue: firstThumbLeft,
@@ -42,14 +49,17 @@ const Slider = ({
         leftValue : secondThumbLeft,
         ref : secondThumbRef,
       }
+    }else if (event.target.id === "range") {
+      return {
+        action : setRangeLeft,
+        leftValue : rangeLeft,
+        ref : rangeRef,
+      }
     }
   };
 
-  function moveAt(pageX, shift, setValue, value, ref) {
-    //getSliderWidth && getSliderWidth(slider.current.offsetWidth);
+  function moveAt(pageX, shift, setValue) {
     const currentThumbPosition = pageX - slider.current.offsetLeft; // left point of current position of thumb on slider
-    console.log('pageX', pageX);
-    console.log('slider.current.offsetLeft', slider.current.offsetLeft);
     if (
       currentThumbPosition > 0 &&
       currentThumbPosition < slider.current.offsetWidth
@@ -58,20 +68,16 @@ const Slider = ({
         ((currentThumbPosition - shift) * 100) / slider.current.offsetWidth
       );
       const rightEdge = Math.round(
-        ((slider.current.offsetWidth - ref.current.offsetWidth) * 100) /
+        ((slider.current.offsetWidth) * 100) /
           slider.current.offsetWidth
       );
 
-      if (left < 0) {
-        value && setValue(0);
-        sendFromValue && sendFromValue(0);
-        sendToValue && sendToValue(0);
-      } else if (left > rightEdge) {
-        value && setValue(rightEdge);
+      if (left > rightEdge) {
+        setValue(rightEdge);
         sendFromValue && sendFromValue(rightEdge);
         sendToValue && sendToValue(rightEdge);
       } else {
-        value && setValue(left);
+        setValue(left);
         sendFromValue && sendFromValue(left);
         sendToValue && sendToValue(left);
       }
@@ -81,12 +87,10 @@ const Slider = ({
   const handleMousedown = (event) => {
     let thumb = getExactThumbValues(event);
     const shiftX = event.clientX - thumb.ref.current.getBoundingClientRect().left;
-    console.log('event.clientX', event.clientX);
-    console.log('thumb.ref.current.getBoundingClientRect().left', thumb.ref.current.getBoundingClientRect().left);
-    moveAt(event.pageX, shiftX, thumb.action, thumb.leftValue, thumb.ref);
+    moveAt(event.pageX, shiftX, thumb.action);
 
     function onMouseMove(event) {
-      moveAt(event.pageX, shiftX, thumb.action, thumb.leftValue, thumb.ref);
+      moveAt(event.pageX, shiftX, thumb.action);
     }
 
     document.addEventListener("mousemove", onMouseMove);
@@ -101,24 +105,29 @@ const Slider = ({
     return false;
   }
 
-  // const handleSliderClick = (event) => {
-  //   const shiftX = thumb.current.getBoundingClientRect().width / 2;
-  //   moveAt(event.pageX, shiftX);
-  // };
-
+  const getValue = () => {
+    if (fromValue !== undefined) {
+      return fromValue
+    } 
+    else if (toValue !== undefined) {
+      return toValue
+    } 
+    else if (firstThumbLeft !== undefined) {
+      return firstThumbLeft
+    } else {
+      return initialThumbLeft
+    }
+  }
   return (
     <div
       className="slider"
       ref={slider}
-      // onClick={handleSliderClick}
     >
       <div
         id="firstThumb"
         className="thumb"
         style={{
-          left: `${
-            fromValue || toValue || firstThumbLeft || initialThumbLeft
-          }%`,
+          left: `${getValue()}%`,
         }}
         onDragStart={() => handleDragStart}
         ref={firstThumbRef || initialThumbRef}
@@ -138,11 +147,15 @@ const Slider = ({
       )}
       {hasRange && (
         <div
+          id="range"
           className="range-space"
           style={{
-            left: `${firstThumbLeft}%`,
-            width: `${rangeWidth}%`,
+            left: `${rangeLeft}%`,
+            width: `${secondThumbLeft - firstThumbLeft}%`,
           }}
+          ref={rangeRef}
+          onDragStart={() => handleDragStart}
+          onMouseDown={handleMousedown}
         ></div>
       )}
       {hasScale && (

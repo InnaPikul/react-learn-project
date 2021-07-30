@@ -3,8 +3,8 @@ import Slider from "../Slider/Slider";
 import "./style.scss";
 
 const TimeRange = ({ hasScale }) => {
-  const [fromValue, setFromValue] = useState(25);
-  const [toValue, setToValue] = useState(70);
+  const [fromValue, setFromValue] = useState(0);
+  const [toValue, setToValue] = useState(25);
 
   const convertToHours = (fieldValue) => {
     const hourInPercent = 100 / 24; //value in % of one hour

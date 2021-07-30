@@ -5,11 +5,12 @@ import "./style.scss";
 const RangeSlider = ({ hasScale, hasRange }) => {
   const firstThumbRef = useRef(null);
   const secondThumbRef = useRef(null);
+  const rangeRef = useRef(null);
 
-  const [firstThumbLeft, setFirstThumbLeft] = useState(20);
+  const [firstThumbLeft, setFirstThumbLeft] = useState(0);
   const [secondThumbLeft, setSecondThumbLeft] = useState(80);
-
-  //const [sliderWidth, setSliderWidth] = useState(null);
+  const [rangeLeft, setRangeLeft] = useState(firstThumbLeft);
+  const [rangeWidth, setRangeWidth] = useState(null);
 
   const handleSecondThumbLeft = (value) => {
     if (value <= firstThumbLeft || value > 100 ) {
@@ -22,6 +23,16 @@ const RangeSlider = ({ hasScale, hasRange }) => {
         return
     }
     setFirstThumbLeft(value);
+    setRangeLeft(value);
+  }
+
+  const handleRangeLeft = (value) => {
+    if (value < 0 || value > 100 ) {
+      return
+    }
+    setFirstThumbLeft(value);
+    handleSecondThumbLeft(value + rangeWidth);
+    setRangeLeft(value);
   }
 
   return (
@@ -35,7 +46,11 @@ const RangeSlider = ({ hasScale, hasRange }) => {
         secondThumbRef={secondThumbRef}
         secondThumbLeft={secondThumbLeft}
         setSecondThumbLeft={handleSecondThumbLeft}
-        //getSliderWidth={setSliderWidth}
+        rangeRef={rangeRef}
+        rangeLeft={rangeLeft}
+        setRangeLeft={handleRangeLeft}
+        rangeWidth={rangeWidth}
+        getRangeWidth={setRangeWidth}
       />
     </div>
   );
