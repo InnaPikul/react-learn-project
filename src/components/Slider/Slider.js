@@ -58,7 +58,7 @@ const Slider = ({
     }
   };
 
-  function moveAt(pageX, shift, setValue) {
+  function moveAt(pageX, shift, setValue, thumbRef) {
     const currentThumbPosition = pageX - slider.current.offsetLeft; // left point of current position of thumb on slider
     if (
       currentThumbPosition > 0 &&
@@ -68,11 +68,14 @@ const Slider = ({
         ((currentThumbPosition - shift) * 100) / slider.current.offsetWidth
       );
       const rightEdge = Math.round(
-        ((slider.current.offsetWidth) * 100) /
+        ((slider.current.offsetWidth + thumbRef.current.offsetWidth) * 100) /
           slider.current.offsetWidth
       );
-
-      if (left > rightEdge) {
+      if (left < 0) {
+        setValue(0);
+        sendFromValue && sendFromValue(0);
+        sendToValue && sendToValue(0);
+      } else if (left > rightEdge) {
         setValue(rightEdge);
         sendFromValue && sendFromValue(rightEdge);
         sendToValue && sendToValue(rightEdge);
@@ -87,10 +90,10 @@ const Slider = ({
   const handleMousedown = (event) => {
     let thumb = getExactThumbValues(event);
     const shiftX = event.clientX - thumb.ref.current.getBoundingClientRect().left;
-    moveAt(event.pageX, shiftX, thumb.action);
+    moveAt(event.pageX, shiftX, thumb.action, thumb.ref);
 
     function onMouseMove(event) {
-      moveAt(event.pageX, shiftX, thumb.action);
+      moveAt(event.pageX, shiftX, thumb.action, thumb.ref);
     }
 
     document.addEventListener("mousemove", onMouseMove);
