@@ -23,11 +23,12 @@ const Slider = ({
   const initialThumbRef = useRef(null);
   const slider = useRef(null);
   const [initialThumbLeft, setInitialThumbLeft] = useState(0);
+  
   useEffect(() => {
     rangeWidth !== undefined && getRangeWidth(secondThumbLeft - firstThumbLeft);
   });
-  
-  const getExactThumbParametrs = (event) => { 
+
+  const getExactThumbValues = (event) => { 
     if (event.target.id === "firstThumb") {
       if (firstThumbLeft !== undefined) {
         return {
@@ -57,20 +58,43 @@ const Slider = ({
     }
   };
 
-  const handleMousedown = (event) => {
-    let thumb = getExactThumbParametrs(event);
-    let lastPosition = event.clientX;
-    
-    function onMouseMove(event) {
-      let currentPosition = event.clientX;
-      let d = (currentPosition - lastPosition) * 100 / slider.current.offsetWidth; // delta in %
-      let newPos = (thumb.leftValue + d);
-      if (newPos > 100 || newPos < 0) {
-        return
+  function moveAt(pageX, shift, setValue, thumbRef) {
+    const currentThumbPosition = pageX - slider.current.offsetLeft; // left point of current position of thumb on slider
+    if (
+      currentThumbPosition > 0 &&
+      currentThumbPosition < slider.current.offsetWidth
+    ) {
+      const left = Math.round(
+        ((currentThumbPosition - shift) * 100) / slider.current.offsetWidth
+      );
+      const rightEdge = Math.round(
+        ((slider.current.offsetWidth + thumbRef.current.offsetWidth) * 100) /
+          slider.current.offsetWidth
+      );
+      if (left < 0) {
+        setValue(0);
+        sendFromValue && sendFromValue(0);
+        sendToValue && sendToValue(0);
+      } else if (left > rightEdge) {
+        setValue(rightEdge);
+        sendFromValue && sendFromValue(rightEdge);
+        sendToValue && sendToValue(rightEdge);
+        console.log('rightEdge', rightEdge);
+      } else {
+        setValue(left);
+        sendFromValue && sendFromValue(left);
+        sendToValue && sendToValue(left);
       }
-      thumb.action(newPos); // Math.round??
-      sendFromValue && sendFromValue(newPos);
-      sendToValue && sendToValue(newPos);
+    }
+  }
+
+  const handleMousedown = (event) => {
+    let thumb = getExactThumbValues(event);
+    const shiftX = event.clientX - thumb.ref.current.getBoundingClientRect().left;
+    moveAt(event.pageX, shiftX, thumb.action, thumb.ref);
+
+    function onMouseMove(event) {
+      moveAt(event.pageX, shiftX, thumb.action, thumb.ref);
     }
 
     document.addEventListener("mousemove", onMouseMove);
@@ -78,6 +102,26 @@ const Slider = ({
     document.addEventListener("mouseup", () => {
       document.removeEventListener("mousemove", onMouseMove);
       thumb.ref.current.onMouseUp = null;
+    });
+  };
+
+  const defineRangeSize = () => {
+
+  }
+
+  const handleRangeMousedown = (event) => {
+    const shiftX = event.clientX - rangeRef.current.getBoundingClientRect().left;
+    //moveAt(event.pageX, shiftX, setRangeLeft, rangeRef);
+
+    function onMouseMove(event) {
+      moveAt(event.pageX, shiftX, setRangeLeft, rangeRef);
+    }
+
+    document.addEventListener("mousemove", onMouseMove);
+
+    document.addEventListener("mouseup", () => {
+      document.removeEventListener("mousemove", onMouseMove);
+      rangeRef.current.onMouseUp = null;
     });
   };
 
@@ -135,7 +179,7 @@ const Slider = ({
           }}
           ref={rangeRef}
           onDragStart={() => handleDragStart}
-          onMouseDown={handleMousedown}
+          onMouseDown={handleRangeMousedown}
         ></div>
       )}
       {hasScale && (

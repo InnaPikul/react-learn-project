@@ -7,10 +7,18 @@ const RangeSlider = ({ hasScale, hasRange }) => {
   const secondThumbRef = useRef(null);
   const rangeRef = useRef(null);
 
-  const [firstThumbLeft, setFirstThumbLeft] = useState(0);
-  const [secondThumbLeft, setSecondThumbLeft] = useState(80);
+  const [firstThumbLeft, setFirstThumbLeft] = useState(() => 0);
+  const [secondThumbLeft, setSecondThumbLeft] = useState(() => 20);
   const [rangeLeft, setRangeLeft] = useState(firstThumbLeft);
   const [rangeWidth, setRangeWidth] = useState(null);
+
+  const handleFirstThumbLeft = (value) => {
+    if (value >= secondThumbLeft || value < 0 ) {
+        return
+    }
+    setFirstThumbLeft(value);
+    setRangeLeft(value);
+  }
 
   const handleSecondThumbLeft = (value) => {
     if (value <= firstThumbLeft || value > 100 ) {
@@ -18,20 +26,13 @@ const RangeSlider = ({ hasScale, hasRange }) => {
     }
     setSecondThumbLeft(value);
   }
-  const handleFirstThumbLeft = (value) => {
-    if (value >= secondThumbLeft || value > 100 ) {
-        return
-    }
-    setFirstThumbLeft(value);
-    setRangeLeft(value);
-  }
 
   const handleRangeLeft = (value) => {
-    if (value < 0 || value > 100 ) {
+    if (value < 0 || (value + rangeWidth) > 100 ) {
       return
     }
     setFirstThumbLeft(value);
-    handleSecondThumbLeft(value + rangeWidth);
+    setSecondThumbLeft(value + rangeWidth);
     setRangeLeft(value);
   }
 
