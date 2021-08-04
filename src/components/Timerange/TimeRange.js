@@ -1,21 +1,12 @@
 import React, { useState } from "react";
 import Slider from "../Slider/Slider";
 import "./style.scss";
-import moment from 'moment';
+import { convertToHours } from '../../utils/convert';
 
 const TimeRange = ({ hasScale }) => {
   const [fromValue, setFromValue] = useState(0);
   const [toValue, setToValue] = useState(0);
-
-  const convertToHours = (fieldValue) => {
-    const hourInPercent = 100 / 24; //value in % of one hour
-    let result = fieldValue / hourInPercent;
-    let resultInHours = Math.floor(fieldValue / hourInPercent);
-    let resultInMinutes =  Math.floor((result - resultInHours) * 60);
-    let newRes = moment(`${resultInHours}:${resultInMinutes}`,"LT").format('HH:mm');
-    return newRes.toString();
-  };
-
+  
   return (
     <div className="flex mb-5">
       <Slider

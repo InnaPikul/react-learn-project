@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import Slider from "../Slider/Slider";
 import "./style.scss";
+import { convertToHours, getDiff } from '../../utils/convert';
 
 const RangeSlider = ({ hasScale, hasRange }) => {
   const firstThumbRef = useRef(null);
@@ -35,6 +36,8 @@ const RangeSlider = ({ hasScale, hasRange }) => {
     setSecondThumbLeft(value + rangeWidth);
     setRangeLeft(value);
   }
+  const from = convertToHours(firstThumbLeft);
+  const to = convertToHours(secondThumbLeft);
 
   return (
     <div>
@@ -52,7 +55,15 @@ const RangeSlider = ({ hasScale, hasRange }) => {
         setRangeLeft={handleRangeLeft}
         rangeWidth={rangeWidth}
         getRangeWidth={setRangeWidth}
+        tooltipFrom={from}
+        tooltipTo={to}
       />
+      <div className="mt-5">
+        <span>{from}</span> - <span>{to}</span>
+      </div>
+      <div className="mt-2">
+        <span>{getDiff(secondThumbLeft, firstThumbLeft)}</span>
+      </div>
     </div>
   );
 };

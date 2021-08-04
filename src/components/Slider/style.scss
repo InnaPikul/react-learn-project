@@ -28,14 +28,31 @@
   height: 25px;
   border-radius: 3px;
   background: blue;
-  cursor: pointer;
+
+  &__tooltip {
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    border: 1px solid lightgray;
+    border-radius: 3px;
+    width: 40px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    pointer-events: none;
+  }
 }
 
 .range-space {
   z-index: 999;
   position: absolute;
-  height: 15px;
-  background: lightgreen;
   top: 0;
   bottom: 0;
+  height: 15px;
+  background: lightgreen;
 }
+
