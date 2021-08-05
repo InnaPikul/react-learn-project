@@ -1,7 +1,8 @@
 import React, { useState, useRef } from "react";
 import Slider from "../Slider/Slider";
 import "./style.scss";
-import { convertToHours, getDiff } from '../../utils/convert';
+import { convertPercentToHours, getHoursDiff } from '../../utils/convert';
+import dayjs from "dayjs";
 
 const RangeSlider = ({ hasScale, hasRange }) => {
   const firstThumbRef = useRef(null);
@@ -36,8 +37,12 @@ const RangeSlider = ({ hasScale, hasRange }) => {
     setSecondThumbLeft(value + rangeWidth);
     setRangeLeft(value);
   }
-  const from = convertToHours(firstThumbLeft);
-  const to = convertToHours(secondThumbLeft);
+
+  const [resultInHoursFrom, resultInMinutesFrom] = convertPercentToHours(firstThumbLeft);
+  const [resultInHoursTo, resultInMinutesTo] = convertPercentToHours(secondThumbLeft);
+
+  let from = dayjs().hour(resultInHoursFrom).minute(resultInMinutesFrom).format("HH:mm");
+  let to = dayjs().hour(resultInHoursTo).minute(resultInMinutesTo).format("HH:mm");
 
   return (
     <div>
@@ -62,7 +67,7 @@ const RangeSlider = ({ hasScale, hasRange }) => {
         <span>{from}</span> - <span>{to}</span>
       </div>
       <div className="mt-2">
-        <span>{getDiff(secondThumbLeft, firstThumbLeft)}</span>
+        <span>{getHoursDiff(secondThumbLeft, firstThumbLeft)}</span>
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Navigation from "./Navigation/Navigation";
 import TabContent from "./TabContent";
 import Tabs from "./Tabs";
 
@@ -31,9 +32,11 @@ const TabsContainer = () => {
   };
 
   return (
+    <div className="container">
+      <Navigation />
       <div className="bg p-3" style={style}>
         <Tabs tabItems={tabItems}>
-        {(tabIndex) => {
+          {(tabIndex) => {
             switch (tabIndex) {
               case 0:
                 return (
@@ -68,6 +71,7 @@ const TabsContainer = () => {
           }}
         </Tabs>
       </div>
+    </div>
   );
 };
 

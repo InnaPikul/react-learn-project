@@ -1,27 +1,28 @@
 import React from "react";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import TabsContainer from "./components/TabsContainer";
-import Slider from './components/Slider/Slider';
-import TimeRange from "./components/Timerange/TimeRange";
-import RangeSlider from "./components/RangeSlider/RangeSlider";
-
+import Home from "./pages/Home";
+import CountryList from "./pages/CountryList";
+import SliderPage from "./pages/SliderPage";
 
 function App() {
   return (
-    <div className="container">
-      <TabsContainer />
-      <section className="mb-5">
-        <h2 className="mb-3">Default slider</h2>
-        <Slider />
-      </section>
-      <section className="mb-5">
-        <h2 className="mb-3">Timerange</h2>
-        <TimeRange hasScale={true} />
-      </section>
-      <section className="mb-5">
-        <h2 className="mb-3">Range slider</h2>
-        <RangeSlider hasScale={true} hasRange={true} />
-      </section>
-    </div>
+    <BrowserRouter>
+      <Switch>
+        <Route path="/list">
+          <CountryList />
+        </Route>
+        <Route path="/tabs">
+          <TabsContainer />
+        </Route>
+        <Route path="/slider">
+          <SliderPage />
+        </Route>
+        <Route path="/">
+          <Home />
+        </Route>
+      </Switch>
+    </BrowserRouter>
   );
 }
 

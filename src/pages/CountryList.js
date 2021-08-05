@@ -1,13 +1,12 @@
 import React from 'react';
 import Navigation from '../components/Navigation/Navigation';
 
-const Home = () => {
+const CountryList = () => {
     return(
         <div className="container">
             <Navigation />
-           home page
+           Country List
         </div>
     );
 }
-
-export default Home;
+export default CountryList;
