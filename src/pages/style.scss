@@ -1,0 +1,8 @@
+.select-field {
+    .col {
+        width: 50%;
+        &:not(:last-child) {
+            border-right: 1px solid gray;
+        }
+    }
+}

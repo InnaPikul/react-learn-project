@@ -1,0 +1,20 @@
+.checkbox {
+    position: relative;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    border: 1px solid gray;
+    border-radius: 2px;
+    &.checked:after {
+        content: '';
+        position: absolute;
+        top: -6px;
+        left: 7px;
+        display: block;
+        width: 10px;
+        height: 20px;
+        border-bottom: 2px solid blue;
+        border-right: 2px solid blue;
+        transform: rotate(45deg);
+    }
+}
