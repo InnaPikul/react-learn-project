@@ -6,32 +6,24 @@ import "./style.scss";
 
 const CountryList = () => {
   const [initialData, setInitialData] = useState(data);
-  const [country, setCountry] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [foundCountries, setFoundCountries] = useState(initialData);
   const [checkedList, setCheckedList] = useState([]);
   const [selected, setSelected] = useState(false);
 
-  // useEffect(() => {
-  //   console.log('sync')
-  //   setInitialData(initialData.map(item => ({...item, selected: false})));
-  // }, []);
-
-  const handleFilterChange = (event) => {
-    const keyWord = event.target.value;
-    if (keyWord !== "") {
+  useEffect(() => {
+    if (searchTerm !== "") {
       const result = initialData.filter((country) =>
-        country.name.toLowerCase().includes(keyWord.toLowerCase())
+        country.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFoundCountries(result);
-    } else {
-      setFoundCountries(initialData);
+    } 
+    else {
+      setFoundCountries(initialData); // need in case, when the keyWord word deleted
     }
-    setCountry(keyWord);
-  };
-
-  const handleCheck = (position, countryCode) => {
-    
-
+  },[searchTerm]);
+  
+  const handleCheck = (countryCode) => {
     setFoundCountries(
       foundCountries.map((item) => {
         if (countryCode === item.code && item.selected ) {
@@ -44,9 +36,9 @@ const CountryList = () => {
       })
     );
 
-    const selectedCountryArr = foundCountries.filter((item) => {
-      if(countryCode === item.code) {
-        return {...item};
+    const selectedCountryArr = foundCountries.filter((country) => {
+      if(countryCode === country.code) {
+        return {...country};
       }
     });
 
@@ -56,11 +48,11 @@ const CountryList = () => {
         prevState.map((item, i, arr) => {
           if(item.code === selectedCountryArr[0].code) {
             arr.splice(i, 1);
-            //return prevState;
-            return arr;
+            console.log('arr', arr);
+            return [...arr];
           }
         })
-        return prevState;
+        return [...prevState];
       }
       return [...prevState, ...selectedCountryArr];
     });
@@ -76,7 +68,7 @@ const CountryList = () => {
       <Navigation />
       <div>
         <div className="mb-5">
-          <input type="search" value={country} onChange={handleFilterChange} />
+          <input type="search" value={searchTerm} onChange={(e) => {setSearchTerm(e.target.value)}} />
         </div>
         <div className="row select-field">
           {foundCountries &&
@@ -87,7 +79,7 @@ const CountryList = () => {
                   return (
                     <div key={item.code} className="d-flex mb-2">
                       <CustomCheckbox
-                        setSelected={() => handleCheck(i, item.code)}
+                        setSelected={() => handleCheck(item.code)}
                         selected={foundCountries[i]?.selected}
                       />
                       <div className="ml-2">
