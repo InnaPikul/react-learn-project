@@ -5,63 +5,42 @@ import data from "../data/countries.json";
 import "./style.scss";
 
 const CountryList = () => {
-  const [initialData, setInitialData] = useState(data);
   const [searchTerm, setSearchTerm] = useState("");
-  const [foundCountries, setFoundCountries] = useState(initialData);
+  const [foundCountries, setFoundCountries] = useState(data);
   const [checkedList, setCheckedList] = useState([]);
   const [selected, setSelected] = useState(false);
 
   useEffect(() => {
     if (searchTerm !== "") {
-      const result = initialData.filter((country) =>
+      const result = data.filter((country) =>
         country.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFoundCountries(result);
     } 
     else {
-      setFoundCountries(initialData); // need in case, when the keyWord word deleted
+      setFoundCountries(data); // need in case, when the keyWord word deleted
     }
   },[searchTerm]);
-  
-  const handleCheck = (countryCode) => {
-    setFoundCountries(
-      foundCountries.map((item) => {
-        if (countryCode === item.code && item.selected ) {
-          return {...item, selected: !item.selected}
-        }
-        if (countryCode === item.code ) {
-          return {...item, selected: !selected}
-        }
-        return item;
-      })
-    );
 
-    const selectedCountryArr = foundCountries.filter((country) => {
-      if(countryCode === country.code) {
-        return {...country};
+  const selectedFlag = (countryCode) => {
+    return foundCountries.map((item) => {
+      if (countryCode === item.code && item.selected ) {
+        return {...item, selected: !item.selected}
       }
-    });
-
-    setCheckedList((prevState) => {
-      const theSameItem  = prevState.find((item) => item.code === selectedCountryArr[0].code);
-      if (theSameItem) {
-        prevState.map((item, i, arr) => {
-          if(item.code === selectedCountryArr[0].code) {
-            arr.splice(i, 1);
-            console.log('arr', arr);
-            return [...arr];
-          }
-        })
-        return [...prevState];
+      if (countryCode === item.code ) {
+        return {...item, selected: !selected}
       }
-      return [...prevState, ...selectedCountryArr];
-    });
-    console.log('foundCountries', foundCountries);
-    console.log('checkedList', checkedList);
+      return item;
+    })
   }
 
-  console.log('foundCountries before r', foundCountries);
-  console.log('checkedList before r', checkedList);
+  useEffect(() => {
+    setCheckedList(foundCountries.filter((country) => {
+      if(country.selected) {
+        return {...country};
+      }
+    }));
+  }, [foundCountries]);
 
   return (
     <div className="container">
@@ -79,8 +58,8 @@ const CountryList = () => {
                   return (
                     <div key={item.code} className="d-flex mb-2">
                       <CustomCheckbox
-                        setSelected={() => handleCheck(item.code)}
                         selected={foundCountries[i]?.selected}
+                        setSelected={() => setFoundCountries(selectedFlag(item.code))}
                       />
                       <div className="ml-2">
                         {item?.name}
