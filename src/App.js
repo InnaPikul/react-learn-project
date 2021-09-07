@@ -4,11 +4,15 @@ import TabsContainer from "./components/TabsContainer";
 import Home from "./pages/Home";
 import CountryList from "./pages/CountryList";
 import SliderPage from "./pages/SliderPage";
+import CountryListWithAPI from "./pages/CountryListWithAPI";
 
 function App() {
   return (
     <BrowserRouter>
       <Switch>
+        <Route path="/list-api">
+          <CountryListWithAPI />
+        </Route>
         <Route path="/list">
           <CountryList />
         </Route>

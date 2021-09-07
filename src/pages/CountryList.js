@@ -9,6 +9,7 @@ const CountryList = () => {
   const [foundCountries, setFoundCountries] = useState(data);
   const [checkedList, setCheckedList] = useState([]);
   const [selected, setSelected] = useState(false);
+  const [keysOfCountries, setKeysOfCountries] = useState({});
 
   useEffect(() => {
     if (searchTerm !== "") {
@@ -65,7 +66,9 @@ const CountryList = () => {
                     <div key={item.code} className={`list-item mb-2 ${foundCountries[i]?.hidden? 'hidden': ''}`}>
                       <CustomCheckbox
                         selected={foundCountries[i]?.selected}
+                        //selected={keysOfCountries[item.code]}
                         setSelected={() => setFoundCountries(selectCountry(item.code))}
+                        //setSelected={() => setFoundCountries(selectCountry(item.code))}
                       />
                       <div className="ml-2">
                         {item?.name}

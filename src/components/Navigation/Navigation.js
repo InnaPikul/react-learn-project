@@ -17,6 +17,9 @@ const Navigation = () => {
           <li className="list__item">
             <NavLink to="/list" activeClassName="selected">List</NavLink>
           </li>
+          <li className="list__item">
+            <NavLink to="/list-api" activeClassName="selected">List with API</NavLink>
+          </li>
         </ul>
       </nav>
   );
