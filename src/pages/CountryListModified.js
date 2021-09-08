@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import CustomCheckbox from "../components/CustomCheckbox/CustomCheckbox";
 import Navigation from "../components/Navigation/Navigation";
 import data from "../data/countries.json";
@@ -7,8 +7,6 @@ import "./style.scss";
 const CountryListModified = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [foundCountries, setFoundCountries] = useState(data);
-  const [checkedList, setCheckedList] = useState({});
-  const [selected, setSelected] = useState(false);
   const [keysOfCountries, setKeysOfCountries] = useState({});
 
   useEffect(() => {
@@ -29,38 +27,15 @@ const CountryListModified = () => {
     }
   }, [searchTerm]);
 
-  const selectCountry = (key, prevState) => {
+  const updateKeys = (code, prevState) => {
     let newKeysOfCountries = {...prevState};
-    newKeysOfCountries[key] = !newKeysOfCountries[key];
-    // console.log(newKeysOfCountries);
+    newKeysOfCountries[code] = !newKeysOfCountries[code];
     return newKeysOfCountries;
   }
 
-  const addList = (key, prevState) => {
-    let newArr = {...prevState};
-    newArr[key] = foundCountries.filter((country, i) => {
-      if(country.code === key) {
-        return country;
-      }
-    
-    });
-    console.log('newArr[key]', newArr[key]);
-  }
-
-  const handleSelect = (key) => {
-    setKeysOfCountries((prevState) => selectCountry(key, prevState));
-    // let newArr = {};
-    // foundCountries.filter((country, i) => {
-    //   if(country.code === key) {
-    //     newArr[key] = country;
-    //     console.log('res', newArr);
-    //     return newArr;
-    //   }
-    // });
-    // console.log('newArr before set ', newArr);
-    // setCheckedList(newArr)
-    setCheckedList((prevState) => addList(key, prevState))
-  }
+  const selectedCountries = useMemo(() => {
+    return foundCountries.filter((country) => keysOfCountries[country.code])
+  }, [keysOfCountries])
 
   return (
     <div className="container">
@@ -79,8 +54,7 @@ const CountryListModified = () => {
                     <div key={item.code} className={`list-item mb-2 ${foundCountries[i]?.hidden? 'hidden': ''}`}>
                       <CustomCheckbox
                         selected={keysOfCountries[item.code]}
-                        // setSelected={() => setKeysOfCountries((prevState) => selectCountry(item.code, prevState))}
-                        setSelected={() => handleSelect(item.code)}
+                        setSelected={() => setKeysOfCountries(updateKeys(item.code, keysOfCountries))} 
                       />
                       <div className="ml-2">
                         {item?.name}
@@ -94,9 +68,8 @@ const CountryListModified = () => {
             ))}
           <div className="col">
             <p className="fw-bold">Selected Countries:</p>
-            {checkedList?.length > 0 && (
               <div>
-                {checkedList.map((item) => {
+                {selectedCountries.map((item) => {
                   return (
                     <div key={item.code} className="mb-2">
                       <div>{item.name}</div>
@@ -104,7 +77,6 @@ const CountryListModified = () => {
                   );
                 })}
               </div>
-            )}
           </div>
         </div>
       </div>
