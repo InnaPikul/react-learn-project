@@ -1,33 +1,14 @@
 import React, { useEffect, useState } from "react";
 import CustomCheckbox from "../components/CustomCheckbox/CustomCheckbox";
 import Navigation from "../components/Navigation/Navigation";
+import SearchInput from "../components/SearchInput/SearchInput";
 import data from "../data/countries.json";
 import "./style.scss";
 
 const CountryList = () => {
-  const [searchTerm, setSearchTerm] = useState("");
   const [foundCountries, setFoundCountries] = useState(data);
   const [checkedList, setCheckedList] = useState([]);
   const [selected, setSelected] = useState(false);
-  const [keysOfCountries, setKeysOfCountries] = useState({});
-
-  useEffect(() => {
-    if (searchTerm !== "") {
-      const result = foundCountries.map((country) => {
-        if(!country.name.toLowerCase().includes(searchTerm.toLowerCase())) {
-          return { ...country, hidden: true }
-        }
-        return { ...country, hidden: false}
-      });
-      setFoundCountries(result);
-    } 
-    else {
-      const data = foundCountries.map(country => {
-        return { ...country, hidden: false }
-      })
-      setFoundCountries(data); // need in case, when the keyWord word was deleted
-    }
-  }, [searchTerm]);
 
   const selectCountry = (countryCode) => {
     return foundCountries.map((item) => {
@@ -42,19 +23,16 @@ const CountryList = () => {
   }
 
   useEffect(() => {
-    setCheckedList(foundCountries.filter((country) => {
-      if(country.selected) {
-        return {...country};
-      }
-    }));
+    setCheckedList(foundCountries.filter(country => country.selected));
   }, [foundCountries]);
 
   return (
     <div className="container">
       <Navigation />
       <div>
+        <h1>With additional flags</h1>
         <div className="mb-5">
-          <input type="search" value={searchTerm} onChange={(e) => {setSearchTerm(e.target.value)}} />
+          <SearchInput foundItems={foundCountries} setFoundResult={setFoundCountries} />
         </div>
         <div className="row select-field">
           {foundCountries &&
@@ -66,9 +44,7 @@ const CountryList = () => {
                     <div key={item.code} className={`list-item mb-2 ${foundCountries[i]?.hidden? 'hidden': ''}`}>
                       <CustomCheckbox
                         selected={foundCountries[i]?.selected}
-                        //selected={keysOfCountries[item.code]}
                         setSelected={() => setFoundCountries(selectCountry(item.code))}
-                        //setSelected={() => setFoundCountries(selectCountry(item.code))}
                       />
                       <div className="ml-2">
                         {item?.name}
@@ -82,17 +58,15 @@ const CountryList = () => {
             ))}
           <div className="col">
             <p className="fw-bold">Selected Countries:</p>
-            {checkedList.length > 0 && (
-              <div>
-                {checkedList.map((item) => {
-                  return (
-                    <div key={item.code} className="mb-2">
-                      <div>{item.name}</div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
+            <div>
+              {checkedList.map((item) => {
+                return (
+                  <div key={item.code} className="mb-2">
+                    <div>{item.name}</div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>

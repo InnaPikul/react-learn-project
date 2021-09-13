@@ -1,31 +1,13 @@
 import React, { useEffect, useState, useMemo } from "react";
 import CustomCheckbox from "../components/CustomCheckbox/CustomCheckbox";
 import Navigation from "../components/Navigation/Navigation";
+import SearchInput from "../components/SearchInput/SearchInput";
 import data from "../data/countries.json";
 import "./style.scss";
 
 const CountryListModified = () => {
-  const [searchTerm, setSearchTerm] = useState("");
   const [foundCountries, setFoundCountries] = useState(data);
   const [keysOfCountries, setKeysOfCountries] = useState({});
-
-  useEffect(() => {
-    if (searchTerm !== "") {
-      const result = foundCountries.map((country) => {
-        if(!country.name.toLowerCase().includes(searchTerm.toLowerCase())) {
-          return { ...country, hidden: true }
-        }
-        return { ...country, hidden: false}
-      });
-      setFoundCountries(result);
-    } 
-    else {
-      const data = foundCountries.map(country => {
-        return { ...country, hidden: false }
-      })
-      setFoundCountries(data); // need in case, when the keyWord word was deleted
-    }
-  }, [searchTerm]);
 
   const updateKeys = (code, prevState) => {
     let newKeysOfCountries = {...prevState};
@@ -42,7 +24,7 @@ const CountryListModified = () => {
       <Navigation />
       <div>
         <div className="mb-5">
-          <input type="search" value={searchTerm} onChange={(e) => {setSearchTerm(e.target.value)}} />
+          <SearchInput foundItems={foundCountries} setFoundResult={setFoundCountries} />
         </div>
         <div className="row select-field">
           {foundCountries &&
