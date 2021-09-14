@@ -1,5 +1,5 @@
 const ChangeColorBtn = (props) => {
-    return (<button onClick={() => props.handleColorSwitch(props.color)}>Change background</button>)
+    return (<button className="btn btn-primary" onClick={() => props.handleColorSwitch(props.color)}>Change background</button>)
 }
 
 export default ChangeColorBtn;
