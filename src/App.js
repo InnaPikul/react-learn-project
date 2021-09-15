@@ -7,8 +7,6 @@ import SliderPage from "./pages/SliderPage";
 import CountryListWithAPI from "./pages/CountryListWithAPI";
 import CountryListModified from "./pages/CountryListModified";
 
-export const ToastContext = React.createContext();
-
 function App() {
   return (
     <BrowserRouter>

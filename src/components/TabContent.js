@@ -20,7 +20,7 @@ const TabContent = (props) => {
           Show message
         </button>
       </div>
-      <CustomToast show={show} setShow={setShow} />
+      <CustomToast show={show} setShow={setShow} message={'from tabs'} />
     </div>
   );
 };
