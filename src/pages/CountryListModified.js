@@ -7,10 +7,14 @@ import SearchInput from "../components/SearchInput/SearchInput";
 import SortingDropdown from "../components/SortingDropdown/SortingDropdown";
 import data from "../data/countries.json";
 import "./style.scss";
+import { useSorting } from "../hooks/useSorting";
 
 const CountryListModified = () => {
   const [foundCountries, setFoundCountries] = useState(data);
   const [keysOfCountries, setKeysOfCountries] = useState({});
+  const [sortingMethod, setSortingMethod] = useState("From A to Z");
+
+  const sortingMethods = ['From A to Z', 'From Z to A'];
 
   const updateKeys = (code, prevState) => {
     let newKeysOfCountries = { ...prevState };
@@ -22,6 +26,13 @@ const CountryListModified = () => {
     return foundCountries.filter((country) => keysOfCountries[country.code]);
   }, [keysOfCountries]);
 
+  const sortedArray = useSorting(foundCountries, sortingMethod);
+  
+  const handleSorting = (method) => {
+    setSortingMethod(method);
+    setFoundCountries(sortedArray);
+  }
+
   return (
     <div className="container">
       <Navigation />
@@ -29,8 +40,9 @@ const CountryListModified = () => {
         <Row xs="auto" className="mb-5">
           <Col>
             <SortingDropdown
-              sortingArray={foundCountries}
-              setSortingArray={setFoundCountries}
+              value={sortingMethod}
+              onChange={handleSorting}
+              sortingMethods={sortingMethods}
             />
           </Col>
           <Col>
@@ -41,16 +53,16 @@ const CountryListModified = () => {
           </Col>
         </Row>
         <div className="row select-field">
-          {foundCountries &&
-            (foundCountries?.length > 0 ? (
+          {sortedArray &&
+            (sortedArray?.length > 0 ? (
               <div className="col">
                 <p className="fw-bold">Countries:</p>
-                {foundCountries.map((item, i) => {
+                {sortedArray.map((item, i) => {
                   return (
                     <div
                       key={item.code}
                       className={`list-item mb-2 ${
-                        foundCountries[i]?.hidden ? "hidden" : ""
+                        sortedArray[i]?.hidden ? "hidden" : ""
                       }`}
                     >
                       <CustomCheckbox
