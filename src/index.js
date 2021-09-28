@@ -3,14 +3,13 @@ import ReactDOM from 'react-dom';
 import './index.scss';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-// import { ToastContext } from './context';
+import NotifivationProvider from './NotificationProvider';
 
 ReactDOM.render(
   <React.StrictMode>
-    {/* <ToastContext.Provider value={'from the root index'}>
+    <NotifivationProvider>
       <App />
-    </ToastContext.Provider> */}
-    <App />
+    </NotifivationProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

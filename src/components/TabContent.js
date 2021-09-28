@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
+import { ToastContext } from "../NotificationProvider";
 import ChangeColorBtn from "./ChangeColorBtn";
-import CustomToast from "../components/Toast/Toast";
 
 const TabContent = (props) => {
-  const [show, setShow] = useState(false);
+  const { actions } = useContext(ToastContext);
 
   const style = {
     background: props.backgroundColor,
@@ -16,11 +16,18 @@ const TabContent = (props) => {
           handleColorSwitch={props.onChange}
           color={props.backgroundColor}
         />
-        <button className="btn btn-secondary" onClick={() => setShow(true)}>
-          Show message
+        <button
+          className="btn btn-secondary"
+          onClick={() =>
+            actions.onShowToast({
+              messageType: "danger",
+              messageBody: "Tabs message",
+            })
+          }
+        >
+          Show toast
         </button>
       </div>
-      <CustomToast show={show} setShow={setShow} message={'from tabs'} />
     </div>
   );
 };

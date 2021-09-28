@@ -6,6 +6,7 @@ import CountryList from "./pages/CountryList";
 import SliderPage from "./pages/SliderPage";
 import CountryListWithAPI from "./pages/CountryListWithAPI";
 import CountryListModified from "./pages/CountryListModified";
+import Notifications from "./components/Notifications/Notifications";
 
 function App() {
   return (
@@ -15,7 +16,7 @@ function App() {
           <CountryListWithAPI />
         </Route>
         <Route path="/list-api-modified">
-         <CountryListModified />
+          <CountryListModified />
         </Route>
         <Route path="/list">
           <CountryList />
@@ -30,6 +31,7 @@ function App() {
           <Home />
         </Route>
       </Switch>
+      <Notifications />
     </BrowserRouter>
   );
 }

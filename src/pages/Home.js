@@ -1,34 +1,24 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import Navigation from "../components/Navigation/Navigation";
-import CustomToast from "../components/Toast/Toast";
-import { ToastContext } from "../context";
+import { ToastContext } from "../NotificationProvider";
 
 const Home = () => {
-  const [show, setShow] = useState(false);
-  // const message = useContext(ToastContext);
-  // return (
-  //   <ToastContext.Consumer> 
-  //     { (message) => {
-  //       return <div className="container">
-  //         <Navigation />
-  //         <h1>home page</h1>
-  //         <button className="btn btn-secondary mb-4" onClick={() => setShow(true)}>
-  //           Show message
-  //         </button>
-  //         <CustomToast show={show} setShow={setShow} message={message} />
-  //       </div>
+  const { actions } = useContext(ToastContext);
 
-  //     }}
-  //   </ToastContext.Consumer>
-  // );
-  return <div className="container">
-          <Navigation />
-          <h1>home page</h1>
-          <button className="btn btn-secondary mb-4" onClick={() => setShow(true)}>
-            Show message
-          </button>
-          <CustomToast show={show} setShow={setShow} message={'s'} />
-        </div>
+  return (
+    <div className="container">
+      <Navigation />
+      <h1>home page</h1>
+      <button
+        className="btn btn-secondary mb-4"
+        onClick={() =>
+          actions.onShowToast({ messageType: "success", messageBody: "YYYY" })
+        }
+      >
+        Show message
+      </button>
+    </div>
+  );
 };
 
 export default Home;

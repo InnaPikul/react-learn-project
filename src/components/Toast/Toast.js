@@ -1,11 +1,16 @@
 import React from "react";
 import Toast from "react-bootstrap/Toast";
 
-const CustomToast = ({show, setShow, message}) => {
-
+const CustomToast = ({ show, closeToast, message, type, delay }) => {
   return (
-    <Toast show={show} onClose={() => setShow(false)} autohide delay={3000}>
-      <Toast.Body>Message {message}</Toast.Body>
+    <Toast
+      bg={type}
+      show={show}
+      onClose={closeToast}
+      autohide
+      delay={delay || 6000}
+    >
+      <Toast.Body className={type}>{message}</Toast.Body>
     </Toast>
   );
 };
