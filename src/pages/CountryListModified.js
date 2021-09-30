@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import CustomCheckbox from "../components/CustomCheckbox/CustomCheckbox";
